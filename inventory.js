@@ -56,4 +56,36 @@ export default class Inventory {
     }
     return null;
   }
+
+  list() {
+    if (this._start == null) {
+      return `No hay productos`;
+    } else {
+      return this._list(this._start);
+    }
+  }
+
+  _list(node) {
+    if (node._next == null) {
+      return node.infoHtml();
+    } else {
+      return `${node.infoHtml()} ${this._list(node._next)}`;
+    }
+  }
+
+  inverseList() {
+    if (this._start == null) {
+      return `No hay productos`;
+    } else {
+      return this._inverseList(this._start);
+    }
+  }
+
+  _inverseList(node) {
+    if (node._next == null) {
+      return node.infoHtml();
+    } else {
+      return ` ${this._inverseList(node._next)} ${node.infoHtml()}`;
+    }
+  }
 }
