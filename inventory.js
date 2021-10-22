@@ -8,18 +8,22 @@ export default class Inventory {
       this._start = product;
       return true;
     }
-    //En caso de que vaya en la primera posicion;
-    if (product.getCode() < this._start.getCode()) {
-      product._next = this._start;
-      this._start._previous = product;
-      this._start = product;
-      console.log(this._start);
-      return true;
-    } else {
-      this._add(product, this._start);
-      console.log(this._start);
-      return true;
+    //No debe existir el producto;
+    if (!this.search(product.getCode())) {
+      //En caso de que vaya en la primera posicion;
+      if (product.getCode() < this._start.getCode()) {
+        product._next = this._start;
+        this._start._previous = product;
+        this._start = product;
+        console.log(this._start);
+        return true;
+      } else {
+        this._add(product, this._start);
+        console.log(this._start);
+        return true;
+      }
     }
+    return false;
   }
   //Se llama a la funcion recursiva si el producto no es el primero en la lista;
   _add(product, aux) {
@@ -37,5 +41,19 @@ export default class Inventory {
       //Si no se cumplen las codiciones probamos con el sig en la lista;
       this._add(product, aux._next);
     }
+  }
+
+  search(code) {
+    let aux = this._start;
+    let stop = false;
+    while (aux != null && !stop) {
+      if (code == aux.getCode()) {
+        return aux;
+      } else if (aux.getCode() > code) {
+        stop = true;
+      }
+      aux = aux._next;
+    }
+    return null;
   }
 }
