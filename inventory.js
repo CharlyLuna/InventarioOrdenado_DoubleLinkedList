@@ -88,4 +88,40 @@ export default class Inventory {
       return ` ${this._inverseList(node._next)} ${node.infoHtml()}`;
     }
   }
+
+  delete(code) {
+    let aux = this._start;
+    //En caso de que se quiera eliminar el inicio y sea el unico producto que hay;
+    if (code == this._start.getCode() && this._start._next == null) {
+      this._start = null;
+      return aux;
+    } else if (code == this._start.getCode()) {
+      this._start = this._start._next;
+      this._start._previous = null;
+      aux._next = null;
+      console.log(aux);
+      return aux;
+    } else {
+      return this._delete(code, this._start);
+    }
+  }
+
+  _delete(code, node) {
+    //Si ya pasamos el ultimo entonces el codigo no existe y no se elimina ningun producto;
+    if (node == null) {
+      return null;
+    } else if (node._next == null && code == node.getCode()) {
+      node._previous._next = null;
+      node._previous = null;
+      return node;
+    } else if (node.getCode() == code) {
+      node._previous._next = node._next;
+      node._next._previous = node._previous;
+      node._next = null;
+      node._previous = null;
+      return node;
+    } else {
+      return this._delete(code, node._next);
+    }
+  }
 }
