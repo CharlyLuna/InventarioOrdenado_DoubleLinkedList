@@ -8,18 +8,16 @@ export default class Inventory {
       this._start = product;
       return true;
     }
-    //No debe existir el producto;
-    if (!this.search(product.getCode())) {
+    //No debe existir el producto y no debe superar el limite;
+    if (!this.search(product.getCode()) && this._howMany() < 20) {
       //En caso de que vaya en la primera posicion;
       if (product.getCode() < this._start.getCode()) {
         product._next = this._start;
         this._start._previous = product;
         this._start = product;
-        console.log(this._start);
         return true;
       } else {
         this._add(product, this._start);
-        console.log(this._start);
         return true;
       }
     }
@@ -91,6 +89,9 @@ export default class Inventory {
 
   delete(code) {
     let aux = this._start;
+    if (this._start == null) {
+      return null; //En caso de que se quiera eliminar un codigo y no haya productos;
+    }
     //En caso de que se quiera eliminar el inicio y sea el unico producto que hay;
     if (code == this._start.getCode() && this._start._next == null) {
       this._start = null;
@@ -99,7 +100,6 @@ export default class Inventory {
       this._start = this._start._next;
       this._start._previous = null;
       aux._next = null;
-      console.log(aux);
       return aux;
     } else {
       return this._delete(code, this._start);
@@ -111,6 +111,7 @@ export default class Inventory {
     if (node == null) {
       return null;
     } else if (node._next == null && code == node.getCode()) {
+      //Aplica este caso cuando se quiere eliminar el ultimo elemento;
       node._previous._next = null;
       node._previous = null;
       return node;
@@ -123,5 +124,15 @@ export default class Inventory {
     } else {
       return this._delete(code, node._next);
     }
+  }
+
+  _howMany() {
+    let aux = this._start;
+    let count = 0;
+    while (aux != null) {
+      count++;
+      aux = aux._next;
+    }
+    return count;
   }
 }
