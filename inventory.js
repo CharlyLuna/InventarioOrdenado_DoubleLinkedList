@@ -1,11 +1,13 @@
 export default class Inventory {
   constructor() {
     this._start = null;
+    this._end = null;
   }
 
   add(product) {
     if (this._start == null) {
       this._start = product;
+      this._end = product;
       return true;
     }
     //No debe existir el producto y no debe superar el limite;
@@ -35,6 +37,7 @@ export default class Inventory {
       //Esto aplica solo en caso de que vaya al ultimo;
       aux._next = product;
       product._previous = aux;
+      this._end = product;
     } else {
       //Si no se cumplen las codiciones probamos con el sig en la lista;
       this._add(product, aux._next);
@@ -75,15 +78,15 @@ export default class Inventory {
     if (this._start == null) {
       return `No hay productos`;
     } else {
-      return this._inverseList(this._start);
+      return this._inverseList(this._end);
     }
   }
 
   _inverseList(node) {
-    if (node._next == null) {
+    if (node._previous == null) {
       return node.infoHtml();
     } else {
-      return ` ${this._inverseList(node._next)} ${node.infoHtml()}`;
+      return `${node.infoHtml()} ${this._inverseList(node._previous)}`;
     }
   }
 
@@ -95,6 +98,7 @@ export default class Inventory {
     //En caso de que se quiera eliminar el inicio y sea el unico producto que hay;
     if (code == this._start.getCode() && this._start._next == null) {
       this._start = null;
+      this._end = null;
       return aux;
     } else if (code == this._start.getCode()) {
       this._start = this._start._next;
@@ -113,6 +117,7 @@ export default class Inventory {
     } else if (node._next == null && code == node.getCode()) {
       //Aplica este caso cuando se quiere eliminar el ultimo elemento;
       node._previous._next = null;
+      this._end = node._previous;
       node._previous = null;
       return node;
     } else if (node.getCode() == code) {
